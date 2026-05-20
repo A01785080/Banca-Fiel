@@ -1,0 +1,10 @@
+# Archivo de configuración Jekyll (opcional)
+# Este archivo es detectado automáticamente por GitHub Pages
+
+title: BancaFiel - Plataforma Digital de Créditos
+description: Solicita tu préstamo o crédito en minutos. Plataforma 100% digital con simulador interactivo.
+author: BancaFiel
+url: https://github.com/
+repository: tu-usuario/bancafiel-platform
+theme: jekyll-theme-minimal
+markdown: kramdown

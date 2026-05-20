@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BancaFiel - Solicitud de Créditos y Préstamos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e3c72;
+            --primary-light: #2a5298;
+            --accent: #00d4ff;
+            --accent-dark: #0099cc;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-input: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --border: #475569;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a2332 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: rgba(30, 60, 114, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--accent);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.5px;
+        }
+
+        .logo::before {
+            content: "";
+            width: 8px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        nav button:hover {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--accent);
+        }
+
+        nav button.active {
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: slideDown 0.8s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent) 0%, #00a8cc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-button {
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+            cursor: pointer;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent);
+            z-index: -1;
+            transition: left 0.3s ease;
+        }
+
+        .tab-button:hover {
+            border-color: var(--accent);
+            color: var(--bg-dark);
+        }
+
+        .tab-button:hover::before {
+            left: 0;
+        }
+
+        .tab-button.active {
+            background: var(--accent);
+            color: var(--bg-dark);
+            border-color: var(--accent);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Form Styles */
+        .form-section {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-section:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.1);
+        }
+
+        .form-section h2 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-input);
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.2);
+            background: var(--bg-input);
+        }
+
+        input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Buttons */
+        button {
+            font-family: inherit;
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: var(--bg-dark);
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--accent);
+            border: 2px solid var(--accent);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent);
+            color: var(--bg-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            opacity: 0.9;
+        }
+
+        /* Grid de resultados */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .result-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .result-card h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .result-card p {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .status-approved {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .status-rejected {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        /* Simulator */
+        .simulator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 968px) {
+            .simulator-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .simulator-input, .simulator-output {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .simulator-output {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(42, 82, 152, 0.05) 100%);
+        }
+
+        .simulator-output h3 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-input);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent);
+        }
+
+        .result-item-label {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .result-item-value {
+            color: var(--accent);
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th {
+            background: var(--bg-input);
+            padding: 1rem;
+            text-align: left;
+            color: var(--accent);
+            font-weight: 700;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        tr:hover {
+            background: var(--bg-input);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .alert-info {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            nav {
+                gap: 1rem;
+            }
+
+            nav button {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.9rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .simulator-grid {
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+
+        /* Animation for success */
+        @keyframes successPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+        }
+
+        .success-pulse {
+            animation: successPulse 0.6s ease;
+        }
+
+        .slider-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            align-items: center;
+        }
+
+        .slider-label-text {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .slider-value {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: var(--bg-input);
+            outline: none;
+            -webkit-appearance: none;
+            padding: 0;
+            margin-top: 0.5rem;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 212, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.6);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 212, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.6);
+        }
+
+        input[type="range"]::-moz-range-track {
+            background: transparent;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">BancaFiel</div>
+            <nav>
+                <button class="nav-btn active" data-section="home">Inicio</button>
+                <button class="nav-btn" data-section="solicitud">Nueva Solicitud</button>
+                <button class="nav-btn" data-section="simulador">Simulador</button>
+                <button class="nav-btn" data-section="solicitudes">Mis Solicitudes</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- HOME Section -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <h1>BancaFiel</h1>
+                <p style="font-size: 1.1rem; margin-bottom: 3rem;">Soluciones crediticias confiables desde hace décadas</p>
+            </div>
+
+            <div class="form-section" style="max-width: 900px; margin: 0 auto 3rem;">
+                <h2 style="font-size: 1.3rem; margin-bottom: 1.5rem;">Sobre Nosotros</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.8;">
+                    BancaFiel es una institución financiera consolidada, con más de 50 años de historia sirviendo a la comunidad local. 
+                    Nos especializamos en la provisión de créditos personales, hipotecarios y automotrices con condiciones competitivas 
+                    y un servicio de excelencia.
+                </p>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.8;">
+                    Nuestro compromiso es modernizar nuestros procesos para mantener la confianza de nuestros clientes, 
+                    reduciendo tiempos de respuesta y mejorando la experiencia en cada transacción. Mediante la implementación 
+                    de tecnología de punta, hemos logrado optimizar nuestras operaciones sin comprometer la calidad del servicio.
+                </p>
+                <p style="color: var(--text-secondary); line-height: 1.8;">
+                    Esta plataforma digital representa nuestro compromiso con la innovación y la accesibilidad. 
+                    Ahora puedes solicitar tus productos crediticios de forma rápida, segura y desde cualquier lugar.
+                </p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--accent); font-size: 2rem;">Horas</div>
+                    <div class="stat-label">Tiempo promedio de aprobación</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-approved" style="color: var(--accent); font-size: 2rem;">0</div>
+                    <div class="stat-label">Solicitudes aprobadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--accent); font-size: 2rem;">3%</div>
+                    <div class="stat-label">Tasa de rechazo optimizada</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--accent); font-size: 2rem;">50+</div>
+                    <div class="stat-label">Años en el mercado</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SOLICITUD Section -->
+        <section id="solicitud" class="section">
+            <h1 style="margin-bottom: 2rem; color: var(--accent);">Solicitud de Producto Crediticio</h1>
+
+            <div class="form-section">
+                <h2>Información Personal</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombre">Nombre Completo *</label>
+                        <input type="text" id="nombre" placeholder="Ej: Juan Pérez García" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo Electrónico *</label>
+                        <input type="email" id="email" placeholder="correo@example.com" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="telefono">Teléfono *</label>
+                        <input type="tel" id="telefono" placeholder="+55 (555) 123-4567" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ine">INE/IFE *</label>
+                        <input type="text" id="ine" placeholder="XXXXXXXXXXXX" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="direccion">Dirección *</label>
+                        <input type="text" id="direccion" placeholder="Calle, número, apartamento" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ocupacion">Ocupación *</label>
+                        <input type="text" id="ocupacion" placeholder="Ej: Ingeniero, Comerciante" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Información Financiera</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tipoCredito">Tipo de Crédito *</label>
+                        <select id="tipoCredito" required>
+                            <option value="">Selecciona una opción</option>
+                            <option value="personal">Préstamo Personal</option>
+                            <option value="automotriz">Crédito Automotriz</option>
+                            <option value="vivienda">Crédito Hipotecario</option>
+                            <option value="tarjeta">Tarjeta de Crédito</option>
+                            <option value="negocio">Crédito para Negocio</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="monto">Monto Solicitado (MXN) *</label>
+                        <input type="number" id="monto" placeholder="50000" min="1000" step="100" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="plazo">Plazo en Meses *</label>
+                        <select id="plazo" required>
+                            <option value="">Selecciona el plazo</option>
+                            <option value="12">12 meses</option>
+                            <option value="24">24 meses</option>
+                            <option value="36">36 meses</option>
+                            <option value="48">48 meses</option>
+                            <option value="60">60 meses</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ingresoMensual">Ingreso Mensual (MXN) *</label>
+                        <input type="number" id="ingresoMensual" placeholder="25000" min="0" step="100" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Documentación</h2>
+                <div class="form-group">
+                    <label for="comprobanteDomicilio">Comprobante de Domicilio (Recibo de Servicios)</label>
+                    <input type="file" id="comprobanteDomicilio" accept=".pdf,.jpg,.png">
+                </div>
+                <div class="form-group">
+                    <label for="comprobanteIngresos">Comprobante de Ingresos (Últimos 3 meses)</label>
+                    <input type="file" id="comprobanteIngresos" accept=".pdf,.jpg,.png">
+                </div>
+                <div class="form-group">
+                    <label for="ineArchivo">Copia de INE/IFE</label>
+                    <input type="file" id="ineArchivo" accept=".pdf,.jpg,.png">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Información Adicional</h2>
+                <div class="form-group">
+                    <label for="motivo">Motivo de la Solicitud</label>
+                    <textarea id="motivo" placeholder="Explica brevemente para qué necesitas el crédito..."></textarea>
+                </div>
+            </div>
+
+            <div id="messageContainer"></div>
+
+            <button class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;" onclick="submitSolicitud()">
+                Enviar Solicitud
+            </button>
+        </section>
+
+        <!-- SIMULADOR Section -->
+        <section id="simulador" class="section">
+            <h1 style="margin-bottom: 2rem; color: var(--accent);">Simulador de Crédito</h1>
+
+            <div class="simulator-grid">
+                <div class="simulator-input">
+                    <h3>Parámetros del Crédito</h3>
+                    
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span class="slider-label-text">Monto del Crédito (MXN)</span>
+                            <span class="slider-value">$<span id="sim-monto-display">100,000</span></span>
+                        </div>
+                        <input type="range" id="sim-monto" min="10000" max="1000000" step="10000" value="100000">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span class="slider-label-text">Plazo (Meses)</span>
+                            <span class="slider-value"><span id="sim-plazo-display">36</span> meses</span>
+                        </div>
+                        <input type="range" id="sim-plazo" min="6" max="120" step="1" value="36">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span class="slider-label-text">Tasa de Interés Anual (%)</span>
+                            <span class="slider-value"><span id="sim-tasa-display">12.5</span>%</span>
+                        </div>
+                        <input type="range" id="sim-tasa" min="5" max="30" step="0.5" value="12.5">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span class="slider-label-text">Comisión de Apertura (%)</span>
+                            <span class="slider-value"><span id="sim-comisión-display">2</span>%</span>
+                        </div>
+                        <input type="range" id="sim-comisión" min="0" max="5" step="0.1" value="2">
+                    </div>
+                </div>
+
+                <div class="simulator-output">
+                    <h3>Resultados de la Simulación</h3>
+                    
+                    <div class="result-item">
+                        <span class="result-item-label">Monto Solicitado</span>
+                        <span class="result-item-value">$<span id="result-monto">100,000</span></span>
+                    </div>
+
+                    <div class="result-item">
+                        <span class="result-item-label">Comisión de Apertura</span>
+                        <span class="result-item-value">$<span id="result-comisión">2,000</span></span>
+                    </div>
+
+                    <div class="result-item">
+                        <span class="result-item-label">Monto Total a Financiar</span>
+                        <span class="result-item-value">$<span id="result-total-financiar">102,000</span></span>
+                    </div>
+
+                    <div class="result-item" style="border-left-color: var(--success);">
+                        <span class="result-item-label">Pago Mensual</span>
+                        <span class="result-item-value">$<span id="result-pago">3,085</span></span>
+                    </div>
+
+                    <div class="result-item">
+                        <span class="result-item-label">Interés Total a Pagar</span>
+                        <span class="result-item-value">$<span id="result-interes">12,500</span></span>
+                    </div>
+
+                    <div class="result-item" style="border-left-color: var(--warning);">
+                        <span class="result-item-label">Costo Total del Crédito</span>
+                        <span class="result-item-value">$<span id="result-costo-total">114,500</span></span>
+                    </div>
+
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-input); border-radius: 8px; border-left: 4px solid var(--accent);">
+                        <p style="color: var(--text-secondary); margin-bottom: 0.5rem;"><strong>Recomendación:</strong></p>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem;" id="consejo">Ajusta los parámetros para encontrar la mejor opción para tu presupuesto.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SOLICITUDES Section -->
+        <section id="solicitudes" class="section">
+            <h1 style="margin-bottom: 2rem; color: var(--accent);">Mis Solicitudes</h1>
+
+            <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stat-card">
+                    <div class="stat-value" id="count-pending">0</div>
+                    <div class="stat-label">Pendientes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="count-approved">0</div>
+                    <div class="stat-label">Aprobadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="count-rejected">0</div>
+                    <div class="stat-label">Rechazadas</div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Historial de Solicitudes</h2>
+                <div id="solicitudesContainer">
+                    <p style="text-align: center; color: var(--text-secondary);">No hay solicitudes aún. ¡Crea tu primera solicitud!</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Data Storage (Simulating Backend)
+        let solicitudes = JSON.parse(localStorage.getItem('bancafiel_solicitudes')) || [];
+        let solicitudesAprobadas = parseInt(localStorage.getItem('bancafiel_aprobadas')) || 0;
+
+        // Navigation
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const section = btn.dataset.section;
+                switchSection(section);
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        function switchSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (sectionId === 'solicitudes') {
+                updateSolicitudesView();
+            }
+        }
+
+        // Simulator
+        const simInputs = {
+            monto: document.getElementById('sim-monto'),
+            plazo: document.getElementById('sim-plazo'),
+            tasa: document.getElementById('sim-tasa'),
+            comisión: document.getElementById('sim-comisión')
+        };
+
+        Object.values(simInputs).forEach(input => {
+            input.addEventListener('input', updateSimulator);
+        });
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('es-MX', {
+                style: 'currency',
+                currency: 'MXN',
+                minimumFractionDigits: 0
+            }).format(value).replace('$', '').trim();
+        }
+
+        function updateSimulator() {
+            const monto = parseFloat(simInputs.monto.value);
+            const plazo = parseInt(simInputs.plazo.value);
+            const tasaAnual = parseFloat(simInputs.tasa.value);
+            const comisionPorcentaje = parseFloat(simInputs.comisión.value);
+
+            // Update display values
+            document.getElementById('sim-monto-display').textContent = formatCurrency(monto);
+            document.getElementById('sim-plazo-display').textContent = plazo;
+            document.getElementById('sim-tasa-display').textContent = tasaAnual.toFixed(1);
+            document.getElementById('sim-comisión-display').textContent = comisionPorcentaje.toFixed(1);
+
+            // Calculate comisión
+            const comisión = monto * (comisionPorcentaje / 100);
+            const montoTotal = monto + comisión;
+
+            // Calculate monthly payment using formula: P * [r(1+r)^n] / [(1+r)^n - 1]
+            const tasaMensual = tasaAnual / 100 / 12;
+            let pagoMensual = 0;
+
+            if (tasaMensual === 0) {
+                pagoMensual = montoTotal / plazo;
+            } else {
+                pagoMensual = montoTotal * (tasaMensual * Math.pow(1 + tasaMensual, plazo)) / 
+                            (Math.pow(1 + tasaMensual, plazo) - 1);
+            }
+
+            const pagoTotal = pagoMensual * plazo;
+            const interesTotal = pagoTotal - montoTotal;
+            const costoTotal = pagoTotal;
+
+            // Update results
+            document.getElementById('result-monto').textContent = formatCurrency(monto);
+            document.getElementById('result-comisión').textContent = formatCurrency(comisión);
+            document.getElementById('result-total-financiar').textContent = formatCurrency(montoTotal);
+            document.getElementById('result-pago').textContent = formatCurrency(pagoMensual);
+            document.getElementById('result-interes').textContent = formatCurrency(interesTotal);
+            document.getElementById('result-costo-total').textContent = formatCurrency(costoTotal);
+
+            // Advice
+            const pagoIngreso = (pagoMensual / 25000) * 100;
+            let consejo = 'Ajusta los parámetros para encontrar la mejor opción para tu presupuesto.';
+            
+            if (pagoIngreso > 50) {
+                consejo = 'El pago mensual es alto. Considera aumentar el plazo o reducir el monto.';
+            } else if (pagoIngreso > 30) {
+                consejo = 'Este es un crédito accesible para la mayoría de personas.';
+            } else {
+                consejo = 'Excelente relación monto/plazo. Puedes pagar cómodamente.';
+            }
+            
+            document.getElementById('consejo').textContent = consejo;
+        }
+
+        // Submit Solicitud
+        async function submitSolicitud() {
+            const form = {
+                nombre: document.getElementById('nombre').value,
+                email: document.getElementById('email').value,
+                telefono: document.getElementById('telefono').value,
+                ine: document.getElementById('ine').value,
+                direccion: document.getElementById('direccion').value,
+                ocupacion: document.getElementById('ocupacion').value,
+                tipoCredito: document.getElementById('tipoCredito').value,
+                monto: document.getElementById('monto').value,
+                plazo: document.getElementById('plazo').value,
+                ingresoMensual: document.getElementById('ingresoMensual').value,
+                motivo: document.getElementById('motivo').value
+            };
+
+            // Validation
+            if (!form.nombre || !form.email || !form.telefono || !form.ine || !form.direccion || 
+                !form.ocupacion || !form.tipoCredito || !form.monto || !form.plazo || !form.ingresoMensual) {
+                showMessage('Por favor completa todos los campos requeridos (*)', 'error');
+                return;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(form.email)) {
+                showMessage('Por favor ingresa un correo válido', 'error');
+                return;
+            }
+
+            // Process application
+            showMessage('Procesando solicitud... Por favor espera.', 'info');
+            
+            // Simulating processing delay
+            setTimeout(() => {
+                const solicitud = {
+                    id: 'SOL-' + Date.now(),
+                    ...form,
+                    fecha: new Date().toLocaleDateString('es-MX'),
+                    hora: new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }),
+                    estado: 'pending'
+                };
+
+                // Auto-approve logic (simulating instant database update)
+                const tasaUtilizacion = (form.monto / form.ingresoMensual) < 5 ? true : false;
+                const credibilidad = form.ingresoMensual > form.monto / 12 ? true : false;
+
+                if (tasaUtilizacion && credibilidad && form.tipoCredito !== 'vivienda') {
+                    solicitud.estado = 'approved';
+                    solicitudesAprobadas++;
+                    setTimeout(() => {
+                        showMessage(`Solicitud aprobada exitosamente. ID: ${solicitud.id}`, 'success');
+                    }, 1000);
+                } else if (form.tipoCredito === 'vivienda') {
+                    solicitud.estado = 'pending';
+                    showMessage(`Tu solicitud está siendo revisada. Nos contactaremos pronto. ID: ${solicitud.id}`, 'info');
+                } else {
+                    solicitud.estado = 'rejected';
+                    showMessage(`Solicitud rechazada. Los parámetros no cumplen los requisitos. ID: ${solicitud.id}`, 'error');
+                }
+
+                // Save to storage
+                solicitudes.push(solicitud);
+                localStorage.setItem('bancafiel_solicitudes', JSON.stringify(solicitudes));
+                localStorage.setItem('bancafiel_aprobadas', solicitudesAprobadas.toString());
+
+                // Reset form
+                document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="number"], textarea, select').forEach(el => {
+                    if (!el.id.startsWith('sim-')) {
+                        el.value = '';
+                    }
+                });
+
+                // Update stats
+                document.getElementById('stat-approved').textContent = solicitudesAprobadas;
+
+                // Show solicitudes section
+                setTimeout(() => {
+                    switchSection('solicitudes');
+                }, 2000);
+            }, 2000);
+        }
+
+        function showMessage(message, type) {
+            const container = document.getElementById('messageContainer');
+            container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+        }
+
+        // Update Solicitudes View
+        function updateSolicitudesView() {
+            const container = document.getElementById('solicitudesContainer');
+            
+            const counts = {
+                pending: solicitudes.filter(s => s.estado === 'pending').length,
+                approved: solicitudes.filter(s => s.estado === 'approved').length,
+                rejected: solicitudes.filter(s => s.estado === 'rejected').length
+            };
+
+            document.getElementById('count-pending').textContent = counts.pending;
+            document.getElementById('count-approved').textContent = counts.approved;
+            document.getElementById('count-rejected').textContent = counts.rejected;
+
+            if (solicitudes.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No hay solicitudes aún. ¡Crea tu primera solicitud!</p>';
+                return;
+            }
+
+            let html = '<table><thead><tr><th>ID Solicitud</th><th>Tipo</th><th>Monto</th><th>Plazo</th><th>Fecha</th><th>Estado</th></tr></thead><tbody>';
+
+            solicitudes.forEach(sol => {
+                const statusClass = `status-${sol.estado}`;
+                const statusText = {
+                    'pending': 'En Revisión',
+                    'approved': 'Aprobada',
+                    'rejected': 'Rechazada'
+                }[sol.estado];
+
+                html += `
+                    <tr>
+                        <td><strong>${sol.id}</strong></td>
+                        <td>${sol.tipoCredito}</td>
+                        <td>$${parseInt(sol.monto).toLocaleString('es-MX')}</td>
+                        <td>${sol.plazo} meses</td>
+                        <td>${sol.fecha} ${sol.hora}</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        // Initialize simulator
+        updateSimulator();
+
+        // Auto-update stats on page load
+        document.getElementById('stat-approved').textContent = solicitudesAprobadas;
+    </script>
+</body>
+</html>
